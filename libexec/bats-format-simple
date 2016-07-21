@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+set -e
+
+IFS= read -r header
+
+index=0
+
+init_suite() {
+  count=0
+  failures=0
+  skipped=0
+  suitetest_exec_time=0
+  name=""
+  _buffer=""
+}
+
+finish_suite() {
+  [[ ${count} -gt 0 ]] && {
+    (
+      flush_log
+      header
+      flush
+      footer
+    ) > "TestReport-${class-case}.xml"
+  }
+  init_suite
+}
+
+trap finish_suite EXIT
+
+reset=$(tput sgr0)
+green=$(tput setaf 2)
+red=$(tput setaf 1)
+yellow=$(tput setaf 3)
+
+tests_failed=0
+tests_passed=0
+
+while IFS= read -r line; do
+  a=($line)
+  case "$line" in
+  "suite "*)
+    ;;
+  "ok "* )
+    echo -e "  ${green}✓ ${a[@]:2}${reset}"
+    tests_passed=$(( $tests_passed + 1))
+    ;;
+  "not ok "* )
+    echo -e "  ${red}✗ ${a[@]:3}${reset}"
+    tests_failed=$(( $tests_failed + 1))
+    ;;
+  "# "* )
+    echo -e "     ${red}${a[@]:1}${reset}"
+    ;;
+  esac
+done
+
+echo
+echo "$(( ${tests_failed} + ${tests_passed} )) tests, ${tests_failed} failure"
+
+[ "${tests_failed}" == "0" ] && exit 0 || exit 1
+

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="" tests="3" failures="1" skip="" time="1">
+    <testcase classname="" name="Check that we have a /tmp directory" time="0"/>
+    <testcase classname="" name="Check that we do sleep" time="1"/>
+</testsuite>
