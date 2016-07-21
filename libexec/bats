@@ -154,7 +154,7 @@ else
 fi
 
 if [ -n "${spretty}" ]; then
-  echo simple pretty
+  extended_syntax_flag="-x"
   formatter="bats-format-simple"
 fi
 
